@@ -1,4 +1,4 @@
-package com.nicole.expensestracker.data.db.entity
+package com.nicole.expensestracker.data.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
