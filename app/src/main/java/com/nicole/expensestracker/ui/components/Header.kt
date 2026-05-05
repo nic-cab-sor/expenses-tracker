@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.TextUnit
 
 @Composable
-fun Header(title: String, fontSize: TextUnit, modifier: Modifier) {
+fun Header(title: String, fontSize: TextUnit, modifier: Modifier = Modifier) {
     Text(
         text = title,
         fontSize = fontSize,
