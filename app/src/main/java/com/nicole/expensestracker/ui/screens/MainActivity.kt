@@ -20,29 +20,8 @@ class MainActivity : ComponentActivity() {
             ExpensesTrackerTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Header("This is the title", 26.sp, Modifier.padding(innerPadding))
-//                    Greeting(
-//                        name = "Android",
-//                        modifier = Modifier.padding(innerPadding)
-//                    )
                 }
             }
         }
     }
 }
-
-// Examples
-//@Composable
-//fun Greeting(name: String, modifier: Modifier = Modifier) {
-//    Text(
-//        text = "Hello $name!",
-//        modifier = modifier
-//    )
-//}
-//
-//@Preview(showBackground = true)
-//@Composable
-//fun GreetingPreview() {
-//    ExpensesTrackerTheme {
-//        Greeting("Android")
-//    }
-//}
