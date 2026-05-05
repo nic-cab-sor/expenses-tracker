@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ExpensesTracker</string>
+    <string name="main_screen_label">Main Screen</string>
 </resources>
