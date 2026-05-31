@@ -19,26 +19,29 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 // TODO: I'm using data classes for now, use db dao's that update the db once this is setup
-sealed interface ExpensesListItem
+sealed interface ExpensesListRow
 
-data class ExpensesListEntry(
+data class Expense(
     val title: String, val amount: Double, val isPaid: Boolean
-) : ExpensesListItem
+) : ExpensesListRow
 
-data class ExpensesListHeader(
+data class Header(
     val title: String
-) : ExpensesListItem
+) : ExpensesListRow
 
+/**
+ * The expenses list contains a list of rows, where each row is either an expense entry or a divider with a header used to separate lists of expenses.
+ */
 @Composable
 fun ExpensesList() {
 
     // TODO: hardcoded for now, will refactor once the db is fully setup
-    var expenseListItems: ArrayList<ExpensesListItem> = ArrayList()
-    expenseListItems.add(ExpensesListHeader("header1"))
-    expenseListItems.add(ExpensesListEntry("expense1", 23.50, false))
-    expenseListItems.add(ExpensesListEntry("expense2", 23.50, false))
-    expenseListItems.add(ExpensesListHeader("header2"))
-    expenseListItems.add(ExpensesListEntry("expense3", 23.50, false))
+    val expensesListRows: ArrayList<ExpensesListRow> = ArrayList()
+    expensesListRows.add(Header("header1"))
+    expensesListRows.add(Expense("expense1", 23.50, false))
+    expensesListRows.add(Expense("expense2", 23.50, false))
+    expensesListRows.add(Header("header2"))
+    expensesListRows.add(Expense("expense3", 23.50, false))
 
     LazyColumn(
         modifier = Modifier
@@ -48,51 +51,42 @@ fun ExpensesList() {
             )
             .padding(4.dp)
     ) {
-        items(expenseListItems) { expenseListItem ->
-            when (expenseListItem) {
-                is ExpensesListEntry -> ExpenseEntryRow(expenseListItem)
-                is ExpensesListHeader -> ExpenseHeaderRow(expenseListItem)
-            }
-        }
+        // For each item create a row in the lazy column
+        items(expensesListRows) { expenseListRow -> ExpensesListRow(expenseListRow) }
     }
 }
 
 @Composable
-private fun ExpenseEntryRow(expensesListEntry: ExpensesListEntry) {
+fun ExpensesListRow(expensesListRow: ExpensesListRow) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.SpaceEvenly,
         modifier = Modifier
             .fillMaxWidth()
             .border(
                 width = 2.dp, color = Color.Green
             )
     ) {
-        OutlinedTextField(
-            value = expensesListEntry.title,
-            onValueChange = {},
-            modifier = Modifier.width(120.dp)
-        )
-        OutlinedTextField(
-            value = expensesListEntry.amount.toString(),
-            onValueChange = {},
-            modifier = Modifier.width(100.dp)
-        )
-        Checkbox(checked = expensesListEntry.isPaid, onCheckedChange = {})
-    }
-}
+        when (expensesListRow) {
+            // If it's an expense entry create a row which contains the expense name, cost, and if it's already been paid
+            is Expense -> {
+                OutlinedTextField(
+                    value = expensesListRow.title,
+                    onValueChange = {},
+                    modifier = Modifier.width(120.dp)
+                )
+                OutlinedTextField(
+                    value = expensesListRow.amount.toString(),
+                    onValueChange = {},
+                    modifier = Modifier.width(100.dp)
+                )
+                Checkbox(checked = expensesListRow.isPaid, onCheckedChange = {})
+            }
 
-@Composable
-private fun ExpenseHeaderRow(expensesListHeader: ExpensesListHeader) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(
-                width = 2.dp, color = Color.Magenta
-            )
-    ) {
-        Text("--- " + expensesListHeader.title + " ---")
+            // If it's just a header create a row with a title
+            is Header -> {
+                Text("--- " + expensesListRow.title + " ---")
+            }
+        }
     }
 }
